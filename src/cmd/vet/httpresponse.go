@@ -40,6 +40,11 @@ func checkHTTPResponse(f *File, node ast.Node) {
 		return // could not find the http.Response in the assignment.
 	}
 
+	if resp.Name == "_" {
+		f.Badf(call.Pos(), "http response body should be closed, not discarded, to avoid a memory leak")
+		return
+	}
+
 	def, ok := stmts[1].(*ast.DeferStmt)
 	if !ok {
 		return // the following statement is not a defer.

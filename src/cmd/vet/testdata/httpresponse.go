@@ -21,6 +21,13 @@ func badHTTPGet() {
 	}
 }
 
+func badHTTPUnclosedResponse() {
+	_, err := http.Get("http://foo.com") // ERROR "http response body should be closed, not discarded, to avoid a memory leak"
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func badHTTPHead() {
 	res, err := http.Head("http://foo.com")
 	defer res.Body.Close() // ERROR "using res before checking for errors"
